@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Giffy</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/taffydb/taffy-min.js"></script>
+    <script src="js/global-taffy-sync.js" defer></script>
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="category.html">Category</a></li>
+          <li><a href="rating.html">Ratings</a></li>
+          <li><a href="likes.html">Likes</a></li>
+          <li><a href="add-gif.html">Add Gifs</a></li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>Category View</h1>
+      </hgroup>
+    </header>
+    <main class="container">
+      <section>
+        <label for="categorySelect">Select Category</label>
+        <select id="categorySelect">
+          <option value="Reaction">Reaction</option>
+          <option value="Cute">Cute</option>
+          <option value="Meme">Meme</option>
+          <option value="Other">Other</option>
+        </select>
+        <button id="gifBtn">Show Gifs</button>
+      </section>
+      <section>
+        <h2>Gifs in Category</h2>
+        <div id="categoryGifs" class="card-style"></div>
+      </section>
+    </main>
+    <footer class="container neog-footer">
+      <small>
+        go from zero to hero at full stack development with
+        <a href="https://neog.camp">neog.camp</a>
+      </small>
+    </footer>
+    <script>
+      const gifBtn = document.getElementById("gifBtn");
+      const categoryElement = document.getElementById("categorySelect");
+
+      function gifCard(gif) {
+        return `<article class="article-style">
+                 <img src="${gif.gif_url}" alt="${gif.title}" class="img-style" />
+                 <h3 class="top-space-style">${gif.title}</h3>
+                 <p>${gif.description}</p>
+                </article>`;
+      }
+
+      function showCategoryGifs() {
+        const selectedCategory = categoryElement.value;
+        const categoryGifsContainer = document.getElementById("categoryGifs");
+
+        const gifs = vibeBoardDB({ category: selectedCategory }).get();
+
+        const displayGifs = gifs.map(gifCard);
+
+        if (displayGifs.length === 0) {
+          categoryGifsContainer.innerHTML = `<p>No Gif Found.</p>`;
+        } else {
+          categoryGifsContainer.innerHTML = displayGifs.join("");
+        }
+      }
+
+      gifBtn.addEventListener("click", showCategoryGifs);
+    </script>
+  </body>
+</html>
